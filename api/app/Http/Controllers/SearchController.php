@@ -10,43 +10,75 @@ use Illuminate\Http\Request;
 class SearchController extends Controller
 {
     /**
-	 * Search for a artist name.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \GuzzleHttp\Guzzle\Client
-	 */
-    public function artists (Request $request, $title, $limit) 
+     * Variable for search.
+     *
+     * @var string
+     */
+    private $url = 'https://api.spotify.com/v1/search';
+    private $type;
+    private $title;
+    private $limit;
+
+    /**
+     * Send the request to fetch API.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return Response
+     */
+    private function search (Request $request)
     {
+        $contents = $this->getSpotifyToken ($request);
+        if (! $contents) {
+            return response ('({Cannot complete the request.})', 500);
+        }
+        $accessToken = $contents->access_token;
+        $tokenType = $contents->token_type;
         try {
-            $contents = $this->getSpotifyToken ($request);
-            if (! $contents) {
-                dd ('Cannot complete the request.');
-                return;
-            }
-            $access_token = $contents->access_token;
-            $token_type = $contents->token_type;
-
-        	$url = 'https://api.spotify.com/v1/search';
-        	$query = $title;
-        	$type = 'artist';
-            $limit = ($limit && (int)$limit <= 5 && (int)$limit > 0) ? $limit : 5;
-
-        	$response = $this->client->request ('GET', $url, [
-        		'headers' => [
-        			'Accept' => 'application/json',
-        			'Authorization' => $token_type.' '.$access_token,
-        		],
-        		'query' => [
-        			'q' => urlencode ($title),
-        			'type' => $type,
-                    'limit' => $limit
-        		]
-        	]);
-        	$response = '('.$response->getBody ()->getContents ().')';
-        	return Response ($response, 200);
+            $response = $this->client->request ('GET', $this->url, [
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Authorization' => $tokenType.' '.$accessToken,
+                ],
+                'query' => [
+                    'q' => urlencode ($this->title),
+                    'type' => $this->type,
+                    'limit' => $this->limit
+                ]
+            ]);
+            $response = '('.$response->getBody ()->getContents ().')';
+            return response ($response, 200);
 
         } catch (GuzzleHttp\Exception\BadResponseException $error) {
-        	dd ('Something wrong.');
+            return response ('({Something is wrong. Please try again.})', 500);
+        }
+    }
+
+    /**
+     * Handle search request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return Response
+     */
+    public function index (Request $request)
+    {
+        try {
+            if (! $request->has (['type', 'title'])) {
+                throw new Exception ();
+            }
+
+            $this->type = $request->query ('type');
+            $this->title = $request->query ('title');
+            $this->limit = $request->query ('limit', 5);
+
+            $this->type = $this->type === 'artist' ? 'artist' : 'track';
+            if (empty ($this->title)) {
+                throw new Exception ();
+            }
+            $this->limit = ($this->limit && (int)$this->limit <= 5 && (int)$this->limit > 0) ? $this->limit : 5;
+            return $this->search ($request);
+
+        } catch (Exception $error) {
+            return response ('({Invalid Request})', 400);
         }
     }
 }

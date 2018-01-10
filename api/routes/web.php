@@ -11,5 +11,4 @@
 |
 */
 
-Route::get ('/search/track/{title}/{limit}', 'SearchController@tracks')->name ('searchTrack');
-Route::get ('/search/artist/{title}/{limit}', 'SearchController@artists')->name ('searchArtist');
+Route::get ('/search', 'SearchController@index')->name ('search');
