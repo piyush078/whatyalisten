@@ -144,7 +144,7 @@ class Controller extends BaseController
      * @param  array                     $parameters
      * @return Response
      */
-    public function sendRequest (Request $request, $resources, $parameters)
+    public function sendRequest (Request $request, $resources, $parameters = [])
     {
         $contents = $this->getSpotifyToken ($request);
         try {

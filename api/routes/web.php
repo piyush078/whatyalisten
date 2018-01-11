@@ -12,3 +12,4 @@
 */
 
 Route::get ('/search', 'SearchController@index')->name ('search');
+Route::get ('/album', 'AlbumController@index')->name ('album');
