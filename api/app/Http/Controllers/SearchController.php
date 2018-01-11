@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use \Exception;
-use \Response;
-use GuzzleHttp;
 use Illuminate\Http\Request;
 
 class SearchController extends Controller
@@ -20,37 +18,21 @@ class SearchController extends Controller
     private $limit;
 
     /**
-     * Send the request to fetch API.
+     * Search.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return Response
      */
     private function search (Request $request)
     {
-        $contents = $this->getSpotifyToken ($request);
-        if (! $contents) {
-            return response ('({Cannot complete the request.})', 500);
-        }
-        $accessToken = $contents->access_token;
-        $tokenType = $contents->token_type;
-        try {
-            $response = $this->client->request ('GET', $this->url, [
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Authorization' => $tokenType.' '.$accessToken,
-                ],
-                'query' => [
-                    'q' => urlencode ($this->title),
-                    'type' => $this->type,
-                    'limit' => $this->limit
-                ]
-            ]);
-            $response = '('.$response->getBody ()->getContents ().')';
-            return response ($response, 200);
-
-        } catch (GuzzleHttp\Exception\BadResponseException $error) {
-            return response ('({Something is wrong. Please try again.})', 500);
-        }
+        return $this->sendRequest ($request, [
+            'method' => 'GET', 
+            'url' => $this->url
+        ], [
+            'q' => urlencode ($this->title),
+            'type' => $this->type,
+            'limit' => $this->limit
+        ]);
     }
 
     /**
@@ -65,7 +47,7 @@ class SearchController extends Controller
             if (! $request->has (['type', 'title'])) {
                 throw new Exception ();
             }
-
+            
             $this->type = $request->query ('type');
             $this->title = $request->query ('title');
             $this->limit = $request->query ('limit', 5);
@@ -78,7 +60,7 @@ class SearchController extends Controller
             return $this->search ($request);
 
         } catch (Exception $error) {
-            return response ('({Invalid Request})', 400);
+            return $this->invalidRequest ();
         }
     }
 }

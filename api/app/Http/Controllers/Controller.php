@@ -20,7 +20,7 @@ class Controller extends BaseController
      *
      * @var \GuzzleHttp\Guzzle\Client
      */
-    public $client = null;
+    private $client = null;
 
     /**
      * Session token variable.
@@ -37,6 +37,17 @@ class Controller extends BaseController
     public function __construct ()
     {
         $this->client = new \GuzzleHttp\Client ();
+    }
+
+    /**
+     * Send invalid request response.
+     *
+     * @param  void
+     * @return Response
+     */
+    public function invalidRequest ()
+    {
+        return response ('({Invalid Request})', 400);
     }
 
     /**
@@ -114,7 +125,7 @@ class Controller extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return mixed
      */
-    public function getSpotifyToken (Request $request)
+    private function getSpotifyToken (Request $request)
     {
         if (! Session::has ($this->sessionTokenName) || ! array_key_exists ('timestamp', Session::get ($this->sessionTokenName))) {
             return $this->initializeToken ($request);
@@ -122,6 +133,38 @@ class Controller extends BaseController
             return $this->refreshToken ($request);
         } else {
             return Session::get ($this->sessionTokenName) ['tokenObject'];
+        }
+    }
+
+    /**
+     * Send the request to fetch API.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  array                     $resources
+     * @param  array                     $parameters
+     * @return Response
+     */
+    public function sendRequest (Request $request, $resources, $parameters)
+    {
+        $contents = $this->getSpotifyToken ($request);
+        try {
+            if (! $contents) {
+                throw new Exception ();
+            }
+            $response = $this->client->request ($resources ['method'], $resources ['url'], [
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Authorization' => $contents->token_type.' '.$contents->access_token,
+                ],
+                'query' => $parameters
+            ]);
+            $response = '('.$response->getBody ()->getContents ().')';
+            return response ($response, 200);
+
+        } catch (GuzzleHttp\Exception\BadResponseException $error) {
+            return response ('({Something is wrong. Please try again.})', 500);
+        } catch (Exception $error) {
+            return response ('({Cannot complete the request.})', 500);
         }
     }
 }
