@@ -13,3 +13,6 @@
 
 Route::get ('/search', 'SearchController@index')->name ('search');
 Route::get ('/album', 'AlbumController@index')->name ('album');
+Route::get ('/artist', 'ArtistController@index')->name ('artist');
+Route::get ('/track', 'TrackController@index')->name ('track');
+Route::get ('/browse', 'PlaylistController@index')->name ('playlist');
