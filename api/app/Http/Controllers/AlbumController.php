@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use \Exception;
 use Illuminate\Http\Request;
 
 class AlbumController extends Controller
