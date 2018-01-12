@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Config;
 use \DateTime;
 use \Session;
+use \Exception;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
@@ -58,7 +59,7 @@ class Controller extends BaseController
      */
     public function getAuthorizationCode () 
     {
-    	$headers = Config::get ('client');
+        $headers = Config::get ('client');
         $client_id = $headers ['client_id'];
         $client_secret = $headers ['client_secret'];
         return base64_encode ($client_id.':'.$client_secret);
@@ -97,6 +98,8 @@ class Controller extends BaseController
                 ]
             ]);
         } catch (GuzzleHttp\Exception\BadResponseException $error) {
+            return false;
+        } catch (Exception $error) {
             return false;
         }
         $contents = json_decode ($response->getBody ()->getContents ());

@@ -37,14 +37,10 @@ class AlbumController extends Controller
      */
     public function index (Request $request)
     {
-        try {
-            if (! $request->has ('id') || empty ($request->query ('id'))) {
-                throw new Exception ();
-            }
-            $this->id = $request->query ('id');
-            return $this->album ($request);
-        } catch (Exception $error) {
+        if (! $request->has ('id') || empty ($request->query ('id'))) {
             return $this->invalidRequest ();
         }
+        $this->id = $request->query ('id');
+        return $this->album ($request);
     }
 }
