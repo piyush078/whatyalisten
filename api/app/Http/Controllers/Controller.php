@@ -48,7 +48,7 @@ class Controller extends BaseController
      */
     public function invalidRequest ()
     {
-        return response ('({Invalid Request})', 400);
+        return response ()->json (['statusCode' => 500, 'responseText' => 'Invalid Request'], 500);
     }
 
     /**
@@ -161,13 +161,13 @@ class Controller extends BaseController
                 ],
                 'query' => $parameters
             ]);
-            $response = '('.$response->getBody ()->getContents ().')';
+            $response = $response->getBody ()->getContents ();
             return response ($response, 200);
-
+            
         } catch (GuzzleHttp\Exception\BadResponseException $error) {
-            return response ('({Something is wrong. Please try again.})', 500);
+            return response ()->json (['statusCode' => 500, 'responseText' => 'Something is wrong. Please try again.'], 500);
         } catch (Exception $error) {
-            return response ('({Cannot complete the request.})', 500);
+            return response ()->json (['statusCode' => 500, 'responseText' => 'Cannot complete the request.'], 500);
         }
     }
 }
