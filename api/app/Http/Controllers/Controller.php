@@ -48,7 +48,7 @@ class Controller extends BaseController
      */
     public function invalidRequest ()
     {
-        return response ()->json (['statusCode' => 500, 'responseText' => 'Invalid Request'], 500);
+        return response ()->json (['statusCode' => 400, 'responseText' => 'Invalid Request'], 400);
     }
 
     /**

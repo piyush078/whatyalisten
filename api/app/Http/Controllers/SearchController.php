@@ -43,7 +43,7 @@ class SearchController extends Controller
     public function index (Request $request)
     {
         if (! $request->has (['type', 'title']) || empty ($request->query ('title'))) {
-            $this->invalidRequest ();
+            return $this->invalidRequest ();
         }
         
         $this->type = $request->query ('type');
