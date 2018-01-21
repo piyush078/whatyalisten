@@ -5,9 +5,10 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
+import { SearchComponent } from './search/search.component';
 
 import { ApiService } from './api.service';
-import { SearchComponent } from './search/search.component';
+import { ErrorService } from './error.service';
 
 @NgModule ({
   declarations: [
@@ -20,7 +21,10 @@ import { SearchComponent } from './search/search.component';
     CommonModule,
     HttpClientModule,
   ],
-  providers: [ApiService],
+  providers: [
+    ApiService,
+    ErrorService,
+  ],
   bootstrap: [AppComponent]
 })
 

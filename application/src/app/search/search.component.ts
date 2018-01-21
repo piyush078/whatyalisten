@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { ApiService } from '../api.service';
+import { ErrorService } from '../error.service';
 
 @Component ({
   selector: 'search',
@@ -11,43 +12,38 @@ import { ApiService } from '../api.service';
 export class SearchComponent implements OnInit {
 
   /**
+   * Variable to store response.
    * Variables for parameters for search.
    *
    * @var mixed
    */
-  private response: Object;
-  private title: string;
-  private limit: number = 1;
-  private type: string; 
-  private URL = 'search';
+  private results: Object;
+  private query: Object = {
+    type: 'track',
+    limit: 1
+  };
+  private url = 'search';
 
-  constructor (private api: ApiService) {}
+  /**
+   * Constructor of SearchComponent.
+   *
+   * @param  class, class
+   * @return void
+   */
+  constructor (
+    private api: ApiService,
+    private error: ErrorService
+  ) {}
   ngOnInit () {}
 
   /**
-   * Make the parameters for search.
-   *
-   * @param  void
-   * @return array
-   */
-  makeParams (): string[] {
-    let query: string[] = [];
-    query ['type'] = this.type;
-    query ['title'] = this.title;
-    query ['limit'] = this.limit;
-    return query;
-  }
-
-  /**
-   * Get the search parameters and call the function for the search request.
+   * Call the function for the search request.
    *
    * @param  void
    * @return void
    */
   search (): void {
-    this.sendRequest (
-      this.makeParams ()
-    );
+    this.sendRequest ();
   }
 
   /**
@@ -56,10 +52,20 @@ export class SearchComponent implements OnInit {
    * @param  array
    * @return void
    */
-  sendRequest (query: string[]): void {
-    this.api.fetchData (this.URL, query).subscribe (
-      data => console.log (data),
-      error => console.log (error)
+  sendRequest (): void {
+    this.api.fetchData (this.url, this.query).subscribe (
+      data => this.formatResponse (data),
+      error => this.error.formatError (error)
     );
+  }
+
+  /**
+   * Format the response to render to the template.
+   *
+   * @param  object
+   * @return void
+   */
+  formatResponse (data: Object): void {
+    this.results = data;
   }
 }

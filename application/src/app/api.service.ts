@@ -24,7 +24,7 @@ export class ApiService {
    * @param  array  query
    * @return HttpParams
    */
-  private updateParams (query: string[]): HttpParams {
+  private updateParams (query: Object): HttpParams {
     let httpParams = new HttpParams ();
     for (let key in query) {
       httpParams = httpParams.set (key, query [key]);
@@ -39,7 +39,7 @@ export class ApiService {
    * @param  array   query
    * @return Observable
    */
-  fetchData (appendUrl: string, query: string[]): Observable<any> {
+  fetchData (appendUrl: string, query: Object): Observable<any> {
     return this.http.get (this.baseUrl + appendUrl, {
       params: this.updateParams (query)
     }).map (

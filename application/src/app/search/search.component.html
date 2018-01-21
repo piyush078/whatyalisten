@@ -1,5 +1,28 @@
-<input type="text" [(ngModel)]="title" id="title" placeholder="Artist or track name">
-<input type="radio" [(ngModel)]="type" value="artist" name="type">Artist
-<input type="radio" [(ngModel)]="type" value="track" name="type">Track
-<input type="number" [(ngModel)]="limit" id="limit" max="5" min="1" placeholder="Number of results">
+<input type="text" [(ngModel)]="query.title" id="title" placeholder="Artist or track name">
+<input type="radio" [(ngModel)]="query.type" value="artist" name="type">Artist
+<input type="radio" [(ngModel)]="query.type" value="track" name="type" checked>Track
+<input type="number" [(ngModel)]="query.limit" id="limit" max="5" min="1" placeholder="Number of results">
 <button (click)="search ()">Search</button>
+
+<div *ngIf="results && results.artists && results.artists.items as artists">
+  <div *ngFor="let artist of artists">
+    <img src="{{ artist.images [2].url }}" />
+    <div>{{ artist.name }}</div>
+  </div>
+</div>
+
+<div *ngIf="results && results.tracks && results.tracks.items as tracks">
+  <div *ngFor="let track of tracks">
+    <div *ngIf="track.album as album">
+      <img src="{{ album.images [2].url }}" />
+      <div>{{ track.name }}</div>
+      (<span>{{ album.name }}</span>)
+    </div>
+    by&nbsp;
+    <div *ngIf="track.artists as artists">
+      <span *ngFor="let artist of artists">
+        {{ artist.name }}
+      </span>
+    </div>
+  </div>
+</div>
