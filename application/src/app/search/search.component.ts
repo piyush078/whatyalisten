@@ -49,7 +49,7 @@ export class SearchComponent implements OnInit {
   /**
    * Send the search request to service provider.
    *
-   * @param  array
+   * @param  void
    * @return void
    */
   sendRequest (): void {
