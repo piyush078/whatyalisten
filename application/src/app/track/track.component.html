@@ -1,3 +1,16 @@
-<p>
-  track works!
-</p>
+<div *ngIf="results as track">
+  <div *ngIf="track.album && track.album.images as albumArt">
+    <img src="{{ albumArt [1].url }}" />
+  </div>
+  <div>Name - {{ track.name }}</div>
+  <div>Popularity - {{ track.popularity }}</div>
+  <div>Time - {{ track.duration_ms }}</div>
+  <div *ngIf="track.artists as artists">
+    by <div *ngFor="let artist of artists">
+      <a routerLink="/artist/{{ artist.id }}">{{ artist.name }}</a>,
+    </div>
+  </div>
+  <div *ngIf="track.album">
+    Album - <a routerLink="/album/{{ track.album.id }}">{{ track.album.name }}</a>
+  </div>
+</div>

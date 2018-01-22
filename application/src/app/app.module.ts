@@ -11,12 +11,16 @@ import { TrackComponent } from './track/track.component';
 import { ApiService } from './api.service';
 import { ErrorService } from './error.service';
 import { AppRoutingModule } from './/app-routing.module';
+import { AlbumComponent } from './album/album.component';
+import { ArtistComponent } from './artist/artist.component';
 
 @NgModule ({
   declarations: [
     AppComponent,
     SearchComponent,
-    TrackComponent
+    TrackComponent,
+    AlbumComponent,
+    ArtistComponent
   ],
   imports: [
     BrowserModule,

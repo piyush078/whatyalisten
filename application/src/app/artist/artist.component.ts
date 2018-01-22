@@ -5,12 +5,12 @@ import { ApiService } from '../api.service';
 import { ErrorService } from '../error.service';
 
 @Component ({
-  selector: 'track',
-  templateUrl: './track.component.html',
-  styleUrls: ['./track.component.css']
+  selector: 'artist',
+  templateUrl: './artist.component.html',
+  styleUrls: ['./artist.component.css']
 })
 
-export class TrackComponent implements OnInit {
+export class ArtistComponent implements OnInit {
 
   /**
    * Variable to store the results.
@@ -19,7 +19,7 @@ export class TrackComponent implements OnInit {
    * @var mixed
    */
   private results: Object;
-  private url: string = 'track';
+  private url: string = 'artist';
 
   constructor (
     private api: ApiService,
@@ -28,16 +28,16 @@ export class TrackComponent implements OnInit {
   ) {}
 
   ngOnInit () {
-  	this.getTrack ();
+  	this.getArtist ();
   }
 
   /**
-   * Send request to fetch data about track id.
+   * Send request to fetch data about artist id.
    *
    * @param  void
    * @return void
    */
-  getTrack (): void {
+  getArtist (): void {
   	const id = this.route.snapshot.paramMap.get ('id');
     this.api.fetchData (this.url, { 'id': id }).subscribe (
       data => this.results = data,

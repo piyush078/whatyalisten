@@ -54,18 +54,8 @@ export class SearchComponent implements OnInit {
    */
   sendRequest (): void {
     this.api.fetchData (this.url, this.query).subscribe (
-      data => this.formatResponse (data),
+      data => this.results = data,
       error => this.error.formatError (error)
     );
-  }
-
-  /**
-   * Format the response to render to the template.
-   *
-   * @param  object
-   * @return void
-   */
-  formatResponse (data: Object): void {
-    this.results = data;
   }
 }

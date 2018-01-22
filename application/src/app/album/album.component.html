@@ -1,0 +1,24 @@
+<div *ngIf="results as album">
+  <div *ngIf="album.images as albumArt">
+    <img src="{{ albumArt [1].url }}" />
+  </div>
+  <div>Name - {{ album.name }}</div>
+  by&nbsp;
+  <div *ngFor="let artist of album.artists">
+    <a routerLink="/artist/{{ artist.id }}">{{ artist.name }}</a>
+  </div>
+  <div>Popularity - {{ album.popularity }}</div>
+  <div *ngFor="let genre of album.genres">
+    <span>{{ genre }}&nbsp;</span>
+  </div>
+  <div>Label - {{ album.label }}</div>
+  <div>Released On - {{ album.release_date }}</div>
+  <div>Copyrights - 
+    <li *ngFor="let copyright of album.copyrights">{{ copyright.text }}</li>
+  </div>
+  <ol *ngIf="album.tracks && album.tracks.items as tracks">
+    <li *ngFor="let track of tracks">
+      <a routerLink="/track/{{ track.id }}">{{ track.name }}</a>
+    </li>
+  </ol>
+</div>

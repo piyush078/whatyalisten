@@ -1,0 +1,9 @@
+<div *ngIf="results as artist">
+  <img src="{{ artist.images [1].url }}" />
+	<div>Name - {{ artist.name }}</div>
+  <div>Popularity - {{ artist.popularity }}</div>
+  <ol *ngIf="artist.genres as genres">
+    Genres:
+    <li *ngFor="let genre of genres">{{ genre }}</li>
+  </ol>
+</div>
