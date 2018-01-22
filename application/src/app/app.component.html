@@ -1,3 +1,6 @@
 <div>{{ title }}</div>
-<search></search>
+<nav>
+  <a routerLink="/search">Search</a>
+</nav>
+<router-outlet></router-outlet>
 <div *ngIf="error">{{ error.text }}</div>

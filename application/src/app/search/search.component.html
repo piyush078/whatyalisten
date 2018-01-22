@@ -7,7 +7,7 @@
 <div *ngIf="results && results.artists && results.artists.items as artists">
   <div *ngFor="let artist of artists">
     <img src="{{ artist.images [2].url }}" />
-    <div>{{ artist.name }}</div>
+    <a routerLink="/artist/{{ artist.id }}"><div>{{ artist.name }}</div></a>
   </div>
 </div>
 
@@ -15,13 +15,13 @@
   <div *ngFor="let track of tracks">
     <div *ngIf="track.album as album">
       <img src="{{ album.images [2].url }}" />
-      <div>{{ track.name }}</div>
-      (<span>{{ album.name }}</span>)
+      <a routerLink="/track/{{ track.id }}"><div>{{ track.name }}</div></a>
+      (<a routerLink="/album/{{ album.id }}"><span>{{ album.name }}</span></a>)
     </div>
     by&nbsp;
     <div *ngIf="track.artists as artists">
       <span *ngFor="let artist of artists">
-        {{ artist.name }}
+        <a routerLink="/artist/{{ artist.id }}">{{ artist.name }}</a>
       </span>
     </div>
   </div>
