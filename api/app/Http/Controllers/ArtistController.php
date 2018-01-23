@@ -16,17 +16,38 @@ class ArtistController extends Controller
     private $albumType = 'album';
 
     /**
+     * Check for valid request parameters.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return mixed
+     */
+    private function checkParams (Request $request)
+    {
+        if (! $request->has ('id') || empty ($request->query ('id'))) {
+            return $this->invalidRequest ();
+        } else {
+            $this->id = $request->query ('id');
+            return false;
+        }
+    }
+
+    /**
      * Get the details of an artist.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return Response
      */
-    private function artist (Request $request)
+    public function artist (Request $request)
     {
-        return $this->sendRequest ($request, [
-        	'method' => 'GET', 
-        	'url' => $this->url.'/'.$this->id
-        ]);
+        $isValid = $this->checkParams ($request);
+        if ($isValid) {
+            return $isValid;
+        } else {
+            return $this->sendRequest ($request, [
+            	'method' => 'GET', 
+            	'url' => $this->url.'/'.$this->id
+            ]);
+        }
     }
 
     /**
@@ -35,15 +56,20 @@ class ArtistController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return Response
      */
-    private function albums (Request $request)
+    public function albums (Request $request)
     {
-    	return $this->sendRequest ($request, [
-    		'method' => 'GET',
-    		'url' => $this->url.'/'.$this->id.'/albums'
-    	], [
-    		'limit' => 100,
-    		'album_type' => $this->albumType
-    	]);
+    	$isValid = $this->checkParams ($request);
+        if ($isValid) {
+            return $isValid;
+        } else {
+            return $this->sendRequest ($request, [
+        		'method' => 'GET',
+        		'url' => $this->url.'/'.$this->id.'/albums'
+        	], [
+        		'limit' => '50',
+        		'album_type' => $this->albumType
+        	]);
+        }
     }
 
     /**
@@ -74,20 +100,5 @@ class ArtistController extends Controller
     		'method' => 'GET',
     		'url' => $this->url.'/'.$this->id.'/related-artists'
     	]);
-    }
-
-    /**
-     * Handle artist data request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return Response
-     */
-    public function index (Request $request)
-    {
-        if (! $request->has ('id') || empty ($request->query ('id'))) {
-            return $this->invalidRequest ();
-        }
-        $this->id = $request->query ('id');
-        return $this->artist ($request);
     }
 }
