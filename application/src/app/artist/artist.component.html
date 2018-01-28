@@ -1,9 +1,18 @@
 <div *ngIf="results as artist">
   <img src="{{ artist.images [1].url }}" />
-	<div>Name - {{ artist.name }}</div>
+  <div>Name - {{ artist.name }}</div>
   <div>Popularity - {{ artist.popularity }}</div>
   <ol *ngIf="artist.genres as genres">
     Genres:
     <li *ngFor="let genre of genres">{{ genre }}</li>
+  </ol>
+
+  <ol *ngIf="artist.items as albums">
+    <li *ngFor="let album of albums">
+      <a routerLink="/album/{{ album.id }}">
+        <span *ngIf="album.images as albumArt"><img src="{{ albumArt [2].url }}" /></span>
+        <span>{{ album.name }}</span>
+      </a>
+    </li>
   </ol>
 </div>

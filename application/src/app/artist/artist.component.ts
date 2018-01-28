@@ -20,6 +20,7 @@ export class ArtistComponent implements OnInit {
    */
   private results: Object;
   private url: string = 'artist';
+  private albumsUrl: string = '/albums';
 
   constructor (
     private api: ApiService,
@@ -38,9 +39,15 @@ export class ArtistComponent implements OnInit {
    * @return void
    */
   getArtist (): void {
-  	const id = this.route.snapshot.paramMap.get ('id');
+    const id = this.route.snapshot.paramMap.get ('id');
     this.api.fetchData (this.url, { 'id': id }).subscribe (
-      data => this.results = data,
+      data => {
+        const artist = data;
+        this.api.fetchData (this.url + this.albumsUrl, { 'id': id }).subscribe (
+          data => this.results = Object.assign (artist, data),
+          error => this.results = artist
+        )
+      },
       error => this.error.formatError (error)
     );
   }
