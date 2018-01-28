@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 
 import { ApiService } from '../api.service';
 import { ErrorService } from '../error.service';
@@ -28,7 +28,12 @@ export class TrackComponent implements OnInit {
   ) {}
 
   ngOnInit () {
-  	this.getTrack ();
+    this.route.params.forEach (
+      (params: Params) => {
+        this.results = null;
+        this.getTrack ()
+      }
+    );
   }
 
   /**
