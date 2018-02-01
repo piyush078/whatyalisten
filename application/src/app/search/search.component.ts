@@ -37,6 +37,16 @@ export class SearchComponent implements OnInit {
   ngOnInit () {}
 
   /**
+   * Change the type of the query.
+   *
+   * @param  void
+   * @return void
+   */
+  toggleType (): void {
+    this.query ['type'] = this.query ['type'] === 'artist' ? 'track' : 'artist';
+  }
+
+  /**
    * Call the function for the search request.
    *
    * @param  void

@@ -1,28 +1,47 @@
-<input type="text" [(ngModel)]="query.title" id="title" placeholder="Artist or track name">
-<input type="radio" [(ngModel)]="query.type" value="artist" name="type">Artist
-<input type="radio" [(ngModel)]="query.type" value="track" name="type" checked>Track
-<input type="number" [(ngModel)]="query.limit" id="limit" max="5" min="1" placeholder="Number of results">
-<button (click)="search ()">Search</button>
-
-<div *ngIf="results && results.artists && results.artists.items as artists">
-  <div *ngFor="let artist of artists">
-    <img src="{{ artist.images [2].url }}" />
-    <a routerLink="/artist/{{ artist.id }}"><div>{{ artist.name }}</div></a>
+<div class="input-group mb-3">
+  <div class="input-group-prepend">
+    <span class="input-group-text" (click)="toggleType ()" style="cursor: pointer;">{{ query.type }}</span>
+  </div>
+  <input class="form-control" type="text" [(ngModel)]="query.title" (keyup.enter)="search ()" id="title" placeholder="Name" aria-label="Search">
+  <div class="input-group-prepend">
+    <input class="input-group-text p-0" type="number" [(ngModel)]="query.limit" (keyup.enter)="search ()" id="limit" max="5" min="1" aria-label="Limit">
   </div>
 </div>
 
-<div *ngIf="results && results.tracks && results.tracks.items as tracks">
-  <div *ngFor="let track of tracks">
-    <div *ngIf="track.album as album">
-      <img src="{{ album.images [2].url }}" />
-      <a routerLink="/track/{{ track.id }}"><div>{{ track.name }}</div></a>
-      (<a routerLink="/album/{{ album.id }}"><span>{{ album.name }}</span></a>)
-    </div>
-    by&nbsp;
-    <div *ngIf="track.artists as artists">
-      <span *ngFor="let artist of artists">
-        <a routerLink="/artist/{{ artist.id }}">{{ artist.name }}</a>
+<div class="d-xs-block w-100" *ngIf="results">
+  <div *ngIf="results.artists && results.artists.items as artists">
+    <div *ngFor="let artist of artists" class="media mb-1">
+      <span *ngIf="artist.images && artist.images [2]; else default_image">
+        <img class="mr-3" src="{{ artist.images [2].url }}" alt="{{ artist.name }}" height="50" width="50" />
       </span>
+      <div class="media-body">
+        <span class="h6"><a routerLink="/artist/{{ artist.id }}"><div>{{ artist.name }}</div></a></span>
+      </div>
     </div>
   </div>
+
+  <div *ngIf="results.tracks && results.tracks.items as tracks">
+    <div *ngFor="let track of tracks">
+      <div *ngIf="track.album as album" class="media mb-1 bg-light">
+        <span *ngIf="album.images [2]; else default_image">
+          <img class="align-self-start mr-3" src="{{ album.images [2].url }}" width="50" height="50" />
+        </span>
+        <div class="media-body">
+          <span class="h6">
+            <a routerLink="/track/{{ track.id }}">{{ track.name }}</a>
+          </span>
+          (<a routerLink="/album/{{ album.id }}">{{ album.name }}</a>)
+          <div *ngIf="track.artists as artists">
+            <span *ngFor="let artist of artists">
+              <a routerLink="/artist/{{ artist.id }}">{{ artist.name }}</a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #default_image>
+    <i class="fas fa-user mr-3" style="border:1px solid gray; padding:16px;"></i>
+  </ng-template>
 </div>

@@ -1,4 +1,5 @@
-<div>{{ title }}</div>
-<search></search>
-<router-outlet></router-outlet>
+<div class="container py-3">
+  <search></search>
+  <router-outlet></router-outlet>
+</div>
 <div *ngIf="error">{{ error.text }}</div>
