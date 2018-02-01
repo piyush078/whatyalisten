@@ -17,8 +17,8 @@ export class ErrorService {
    * @return void
    */
   formatError (error: Object): void {
-    if (error.error && error.error.responseText) {
-      this.text = error.error.responseText;
+    if (error.hasOwnProperty ('error') && error ['error'].hasOwnProperty ('responseText')) {
+      this.text = error ['error']['responseText'];
     } else {
       this.text = 'Something is wrong. Please try again.';
     }
