@@ -1,24 +1,30 @@
-<div *ngIf="results as album">
-  <div *ngIf="album.images as albumArt">
-    <img src="{{ albumArt [1].url }}" />
+<div class="media" *ngIf="results as album">
+  <div *ngIf="album.images as albumArt; else default_image;">
+    <img src="{{ albumArt [1].url }}" class="mr-3" width="128" height="128" />
   </div>
-  <div>Name - {{ album.name }}</div>
-  by&nbsp;
-  <div *ngFor="let artist of album.artists">
-    <a routerLink="/artist/{{ artist.id }}">{{ artist.name }}</a>
+  <div class="media-body">
+    <div class="h2">{{ album.name }}</div>
+    <div *ngFor="let artist of album.artists">
+      <a class="h5" routerLink="/artist/{{ artist.id }}">{{ artist.name }}</a>
+    </div>
+    <div class="h6" *ngFor="let genre of album.genres">
+      <span>{{ genre }},&nbsp;</span>
+    </div>
+    <div>Released on {{ album.release_date }}</div>
+    <div>{{ album.popularity }}% popularity</div>
+    <ol *ngIf="album.tracks && album.tracks.items as tracks" class="list-group mb-1">
+      <span class="h6 mt-2 mb-1">Track Listing:</span>
+      <li *ngFor="let track of tracks" class="list-group-item p-0" style="border:0;">
+        <a style="color:black;" routerLink="/track/{{ track.id }}">{{ track.name }}</a>
+      </li>
+    </ol>
+    <div class="text-muted"><small>{{ album.label }}</small></div>
+    <div class="text-muted p-0">
+      <small>Copyrights: <span *ngFor="let copyright of album.copyrights">{{ copyright.text }},&nbsp;</span></small>
+    </div>
   </div>
-  <div>Popularity - {{ album.popularity }}</div>
-  <div *ngFor="let genre of album.genres">
-    <span>{{ genre }}&nbsp;</span>
-  </div>
-  <div>Label - {{ album.label }}</div>
-  <div>Released On - {{ album.release_date }}</div>
-  <div>Copyrights - 
-    <li *ngFor="let copyright of album.copyrights">{{ copyright.text }}</li>
-  </div>
-  <ol *ngIf="album.tracks && album.tracks.items as tracks">
-    <li *ngFor="let track of tracks">
-      <a routerLink="/track/{{ track.id }}">{{ track.name }}</a>
-    </li>
-  </ol>
 </div>
+
+<ng-template #default_image>
+  <img src="https://www.infoescola.com/wp-content/uploads/2013/12/cd.jpg" class="mr-3" width="128" height="128" />
+</ng-template>

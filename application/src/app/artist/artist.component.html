@@ -1,18 +1,32 @@
-<div *ngIf="results as artist">
-  <img src="{{ artist.images [1].url }}" />
-  <div>Name - {{ artist.name }}</div>
-  <div>Popularity - {{ artist.popularity }}</div>
-  <ol *ngIf="artist.genres as genres">
-    Genres:
-    <li *ngFor="let genre of genres">{{ genre }}</li>
-  </ol>
-
-  <ol *ngIf="artist.items as albums">
-    <li *ngFor="let album of albums">
-      <a routerLink="/album/{{ album.id }}">
-        <span *ngIf="album.images as albumArt"><img src="{{ albumArt [2].url }}" /></span>
-        <span>{{ album.name }}</span>
-      </a>
-    </li>
-  </ol>
+<div class="media" *ngIf="results as artist">
+  <span *ngIf="artist.images && artist.images [1]; else default_image">
+    <img class="mr-3" src="{{ artist.images [1].url }}" width="128" height="128" />
+  </span>
+  <div class="media-body">
+    <div class="h2">{{ artist.name }}</div>
+    <div *ngIf="artist.genres as genres">
+      <span class="h5">Genres:</span>
+      <div><span *ngFor="let genre of genres">{{ genre }}, </span></div>
+    </div>
+    <div>{{ artist.popularity }}% popularity</div>
+    <ol *ngIf="artist.items as albums" class="list-group mt-3">
+      <div class="h5">Albums</div>
+      <li *ngFor="let album of albums" class="list-group-item p-0" style="border:0;">
+        <a class="media" routerLink="/album/{{ album.id }}">
+          <span *ngIf="album.images && album.images [2] as albumArt; else album_image">
+            <img src="{{ albumArt.url }}" width="40" height="40" class="mr-3" />
+          </span>
+          <span class="media-body h6">{{ album.name }}</span>
+        </a>
+      </li>
+    </ol>
+  </div>
 </div>
+
+<ng-template #default_image>
+  <img src="https://www.infoescola.com/wp-content/uploads/2013/12/cd.jpg" class="mr-3" width="128" height="128" />
+</ng-template>
+
+<ng-template #album_image>
+  <img src="https://www.infoescola.com/wp-content/uploads/2013/12/cd.jpg" class="mr-3" width="40" height="40" />
+</ng-template>

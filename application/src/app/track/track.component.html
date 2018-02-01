@@ -1,16 +1,22 @@
-<div *ngIf="results as track">
-  <div *ngIf="track.album && track.album.images as albumArt">
-    <img src="{{ albumArt [1].url }}" />
-  </div>
-  <div>Name - {{ track.name }}</div>
-  <div>Popularity - {{ track.popularity }}</div>
-  <div>Time - {{ track.duration_ms }}</div>
-  <div *ngIf="track.artists as artists">
-    by <div *ngFor="let artist of artists">
-      <a routerLink="/artist/{{ artist.id }}">{{ artist.name }}</a>,
+<div class="media" *ngIf="results as track">
+  <span *ngIf="track.album && track.album.images as albumArt; else default_image">
+    <img src="{{ albumArt [1].url }}" class="mr-3" width="128" height="128" />
+  </span>
+  <div class="media-body">
+    <div class="h2">{{ track.name }}</div>
+    <div *ngIf="track.artists as artists">
+      <span *ngFor="let artist of artists">
+        <a class="h5" routerLink="/artist/{{ artist.id }}">{{ artist.name }}</a>,
+      </span>
     </div>
-  </div>
-  <div *ngIf="track.album">
-    Album - <a routerLink="/album/{{ track.album.id }}">{{ track.album.name }}</a>
+    <div *ngIf="track.album">
+      Album: <a class="h6" routerLink="/album/{{ track.album.id }}">{{ track.album.name }}</a>
+    </div>
+    <div>{{ track.popularity }}% popularity</div>
+    <div>{{ ((track.duration_ms / 60000)).toFixed (2) }} minutes</div>
   </div>
 </div>
+
+<ng-template #default_image>
+  <img src="https://www.infoescola.com/wp-content/uploads/2013/12/cd.jpg" class="mr-3" width="128" height="128" />
+</ng-template>
