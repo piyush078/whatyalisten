@@ -1,5 +1,8 @@
+<div *ngIf="error.text" class="alert alert-success">
+    <button type="button" class="close" (click)="error.text=null">x</button>
+    <strong>{{ error.text }}</strong>
+</div>
 <div class="container py-3">
   <search></search>
   <router-outlet></router-outlet>
 </div>
-<div *ngIf="error">{{ error.text }}</div>
